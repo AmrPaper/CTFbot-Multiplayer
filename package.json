@@ -1,0 +1,31 @@
+{
+  "name": "ctfbot-multiplayer",
+  "version": "1.0.0",
+  "description": "A multiplayer oriented version of my CTFbot, made to accommodate team oriented events. Made for the first PaperCTF which is being held at UTM.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AmrPaper/CTFbot-Multiplayer.git"
+  },
+  "keywords": [
+    "discord",
+    "mongodb"
+  ],
+  "author": "AmrPaper",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AmrPaper/CTFbot-Multiplayer/issues"
+  },
+  "homepage": "https://github.com/AmrPaper/CTFbot-Multiplayer#readme",
+  "dependencies": {
+    "discord.js": "^14.19.3",
+    "dotenv": "^16.5.0",
+    "mongoose": "^8.14.1",
+    "node": "^22.15.0",
+    "nodemon": "^3.1.10"
+  },
+  "type": "module"
+}
