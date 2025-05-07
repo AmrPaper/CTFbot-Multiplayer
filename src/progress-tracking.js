@@ -1,86 +1,88 @@
-import mongoose from "mongoose";
-import userProgressSchema from "./user-progress-schema.js";
+import {Team, Player} from "./progress-schema.js";
 import { config } from "dotenv";
 config();
+
 const prefix = "$";
-
-const flags = {"1": process.env.FLAG1, "2":process.env.FLAG2};
-
-async function checkPhase(msg) {
-    mongoose.connect(process.env.MONGODB_URI);
-    const player = await userProgressSchema.findOne({ _id: msg.author.id});
-    return player ? player.currentPhase : console.log("User not found.");
-}
+const flags = {
+    "1": process.env.FLAG1,
+    "2":process.env.FLAG2,
+    "3":process.env.FLAG3
+};
 
 async function submitFlag(msg, args) {
-    mongoose.connect(process.env.MONGODB_URI);
-    const playerName = await msg.author.globalName;
-    const usrRoles = await msg.member.roles.cache.map(r => r.name);
-    const playerID = await msg.author.id;
-    let phaseValid = false;
 
+    const playerID = await msg.author.id;
+    const usrRoles = await msg.member.roles.cache.map(r => r.name);
+    
     try {
         if (!usrRoles.includes("ctf")) {
-            msg.reply("You are not participating in the ongoing CTF, please contact Paper for assistance!");
-        } else {
-            if (playerName) {
-                if (args.length > 0) {
-                    const usrSubmission = msg.content.slice(prefix.length + args[0].length).trim();
+            return msg.reply("You are not registered in the ongoing CTF, please contact one of the organisers for assistance!");
+        }
 
-                    for (const [stage, flag] of Object.entries(flags)) {
-                        if (flag == usrSubmission) {
-                            if (playerID) {
-                                let player = await userProgressSchema.findOne({ _id: playerID });
-                                
-                                if(player) {
-                                    if (player.currentPhase > Number(stage)) {
-                                        msg.reply("You've already completed this phase. Please move on to the next.");
-                                        return;
-                                    } else {
-                                        phaseValid = player.currentPhase === Number(stage);
-                                    }
-                                } else {
-                                    console.log("Player not found");
-                                    return;
-                                }
-                            }
-                            
-                            if (phaseValid) {
-                                try {
-                                    const nextPhase = Number(stage) + 1;
-                                    await userProgressSchema.findOneAndUpdate(
-                                        {_id: msg.author.id },
-                                        { currentPhase: nextPhase },
-                                        { upsert: true }
-                                    );
-                                } catch (error) {
-                                    console.log(`Error: ${error}`);
-                                    msg.reply("There was an error updating your phase 😭. Please try again!")
-                                };
-                                msg.channel.send(`You've submitted the correct flag for phase ${stage}! Good Job!`);
-                                try {
-                                    msg.delete();
-                                    console.log("Message successfully deleted!");
-                                } catch (error) {
-                                    console.log(error);
-                                }
-                                return;
-                            } else {
-                                msg.reply("Seem you're trying to skip a phase, smh my head 🤦‍♂️.");
-                                return;
-                            }
-                        }
-                    }
+        if (!args.length) {
+            return msg.reply("Please submit a valid flag!");
+        }
 
-                    msg.reply("The flag you submitted is incorrect. Try again 😉.")
-                } else {msg.reply("Please submit a valid flag");}
-            } else {
-                msg.reply("You aren't a participating member yet, please contact Paper for assistance!");
-            };
-        };
+        const usrSubmission = msg.content.slice(prefix.length + args[0].length).trim();
+
+        const player = await Player.findOne({ _id: playerID});
+        if (!player) {
+            return msg.reply("You are not registered within the CTF's database, please contact one of the organisers for assistance!");
+        }
+
+        for (const [phase, flag] of Object.entries(flags)) {
+            if (usrSubmission != flag) continue;
+
+            const currentPhase = player.currentPhase;
+            const targetPhase = Number(phase);
+            const nextPhase = targetPhase + 1;
+
+            if (currentPhase > targetPhase) {
+                return msg.reply("You have already completed this phase, please move on to the next phase.");
+            }
+
+            if (currentPhase !== targetPhase) {
+                msg.reply("It seems you are trying to skip a phase. Smh my head 🤦‍♂️.");
+                return msg.reply("@organiser help is required to deal with this case.");
+            }
+
+            try {
+                if (player.team) {
+                    await Player.updateMany(
+                        { team: player.team._id, currentPhase: { $lt: nextPhase } },
+                        { currentPhase: nextPhase }
+                    );
+                    await Team.findOneAndUpdate(
+                        { _id: player.team._id },
+                        { currentPhase: nextPhase }
+                    );
+                } else {
+                    await Player.findOneAndUpdate(
+                        { _id: playerID },
+                        { currentPhase: nextPhase }
+                    );
+                }
+            } catch (error) {
+                console.log(`Error updating phase: ${error}`);
+                return msg.reply("There was an error updating your phase 😭. Please try again!");
+            }
+
+            try {
+                await msg.delete();
+                console.log("Message successfully deleted!");
+            } catch (error) {
+                console.log("Error deleting message:", error);
+            }
+
+            return msg.channel.send(`You've submitted the correct flag for phase ${targetPhase}! Good Job!`);
+        }
+
+        msg.reply("The flag you submitted is incorrect. Try again 😉.");
+
     } catch (error) {
-        console.log(`Error: ${error}`);
-    }  
-}
+        console.log(`Unexpected error: ${error}`);
+        msg.reply("An unexpected error occurred.");
+    }
+};
 
-export { submitFlag, checkPhase };
+export { submitFlag };
