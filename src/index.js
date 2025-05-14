@@ -1,6 +1,7 @@
 import {Client, IntentsBitField, ActivityType} from "discord.js";
 import {mongoose} from "mongoose";
 import { join, reset, leave, remove, add } from "./register.js";
+import { registerTeam, addMember, removeMember, deleteTeam } from "./team-assignment.js";
 import { submitFlag } from "./progress-tracking.js";
 import { welcome, intro, help, init } from "./commands.js";
 import { phase1, phase2 } from "./challenges.js";
@@ -35,6 +36,10 @@ const commandHandlers = {
     "remove": remove,
     "add": add,
     "init": init,
+    "registerteam": registerTeam,
+    "removemember": removeMember,
+    "addmember": addMember,
+    "deleteteam": deleteTeam,
     "intro":intro,
     "help": help,
     "join": join,

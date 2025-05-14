@@ -2,8 +2,7 @@ import pkg from "mongoose";
 const { Schema, model, models} = pkg; 
 
 const playerInfoSchema = new Schema({
-    _id: {
-        //Stores the discord user's ID
+    _id: {//User's discord ID
         type: String,
         required: true
     },
@@ -24,18 +23,30 @@ const playerInfoSchema = new Schema({
 });
 
 const teamInfoSchema = new Schema({
-    name: {
+    name: { //Team name
         type: String,
         required: true,
         unique: true
     },
-    members: [{
+    members: [{ //Player IDs
         type: String,
         ref: "Ctf-Players"
     }],
     currentPhase: {
         type: Number,
         default: 1,
+        required: true
+    },
+    roleID: { //Team's role ID
+        type: String,
+        required: true
+    },
+    channelID: { //Team's private channel ID
+        type: String,
+        required: true
+    },
+    colour: { //Team's role colour
+        type: String,
         required: true
     }
 });

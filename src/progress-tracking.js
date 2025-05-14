@@ -1,3 +1,4 @@
+import {mongoose} from "mongoose";
 import {Team, Player} from "./progress-schema.js";
 import { config } from "dotenv";
 config();
@@ -9,14 +10,20 @@ const flags = {
     "3":process.env.FLAG3
 };
 
+async function checkPhase(msg) {
+    mongoose.connect(process.env.MONGODB_URI);
+    const player = await Player.findOne({ _id: msg.author.id});
+    return player ? player.currentPhase : console.log("User not found.");
+}
+
 async function submitFlag(msg, args) {
 
     const playerID = await msg.author.id;
     const usrRoles = await msg.member.roles.cache.map(r => r.name);
     
     try {
-        if (!usrRoles.includes("ctf")) {
-            return msg.reply("You are not registered in the ongoing CTF, please contact one of the organisers for assistance!");
+        if (!usrRoles.includes("[ARG] Player")) {
+            return msg.reply("You are not registered in the ongoing ARG, please contact one of the organisers for assistance!");
         }
 
         if (!args.length) {
@@ -27,7 +34,7 @@ async function submitFlag(msg, args) {
 
         const player = await Player.findOne({ _id: playerID});
         if (!player) {
-            return msg.reply("You are not registered within the CTF's database, please contact one of the organisers for assistance!");
+            return msg.reply("You are not registered within the ARG's database, please contact one of the organisers for assistance!");
         }
 
         for (const [phase, flag] of Object.entries(flags)) {
@@ -85,4 +92,4 @@ async function submitFlag(msg, args) {
     }
 };
 
-export { submitFlag };
+export { submitFlag, checkPhase };

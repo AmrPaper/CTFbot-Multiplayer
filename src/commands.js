@@ -76,39 +76,39 @@ async function init(msg) {
 
     if (member.permissions.has("ADMINISTRATOR")) {
         try {
-            const ctf = await msg.guild.roles.cache.find((role) => role.name === "ctf");
-            const organiser = await msg.guild.roles.cache.find((role) => role.name === "organiser");
+            const player = await msg.guild.roles.cache.find((role) => role.name === "[ARG] Player");
+            const organiser = await msg.guild.roles.cache.find((role) => role.name === "[ARG] Organiser");
     
-            if (!ctf && !organiser) {
+            if (!player && !organiser) {
                 await msg.guild.roles.create({
-                    name: 'ctf',
+                    name: '[ARG] Player',
                     color: '#0000FF',
                     mentionable: true,
                 });
     
                 await msg.guild.roles.create({
-                    name: 'organiser',
+                    name: '[ARG] Organiser',
                     color: '#FF0000',
                     mentionable: true,
                 });
                 
-                msg.reply("CTF and Organiser roles successfully created!");
-            } else if (!ctf && organiser) {
+                msg.reply("Player and Organiser roles successfully created!");
+            } else if (!player && organiser) {
                 await msg.guild.roles.create({
-                    name: 'ctf',
+                    name: '[ARG] Player',
                     color: '0000FF',
                     mentionable: true,
                 });
-                msg.reply("CTF role successfully created!");
-            } else if (ctf && !organiser) {
+                msg.reply("Player role successfully created!");
+            } else if (player && !organiser) {
                 await msg.guild.roles.create({
-                    name: 'organiser',
+                    name: '[ARG] Organiser',
                     color: 'FF0000',
                     mentionable: true,
                 });
                 msg.reply("Organiser role successfully created!");
             } else {
-                msg.reply("CTF and Organiser roles both already exist");
+                msg.reply("Player and Organiser roles both already exist");
             }
         } catch (error) {
             console.log(`Error: ${error}`);
