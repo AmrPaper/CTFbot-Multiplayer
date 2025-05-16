@@ -3,6 +3,11 @@ import { Player, Team } from "./progress-schema.js";
 import { upsertPlayer } from "./utility.js";
 
 async function registerTeam(msg) {
+    const senderRoles = msg.member.roles.cache.map(r => r.name);
+    if (!senderRoles.includes("[ARG] Organiser")) {
+        return msg.reply("You do not have permission to use this command, please contact an organiser.");
+    }
+
     const match = msg.content.match(/\$registerteam\s+\"([^\"]+)\"\s+(#[A-Fa-f0-9]{6})\s+((<@!?\d+>\s*){1,3})/);
     if (!match) return msg.reply("Usage: $registerteam \"Team Name\" #hexcolor @user1 @user2 (up to 3)");
 
@@ -64,6 +69,11 @@ async function registerTeam(msg) {
 }
 
 async function addMember(msg) {
+    const senderRoles = msg.member.roles.cache.map(r => r.name);
+    if (!senderRoles.includes("[ARG] Organiser")) {
+        return msg.reply("You do not have permission to use this command, please contact an organiser.");
+    }
+
     const match = msg.content.match(/\$addmember\s+\"([^\"]+)\"\s+<@!?(\d+)>/);
     if (!match) return msg.reply("Usage: $addmember \"Team Name\" @user");
 
@@ -94,6 +104,11 @@ async function addMember(msg) {
 }
 
 async function removeMember(msg) {
+    const senderRoles = msg.member.roles.cache.map(r => r.name);
+    if (!senderRoles.includes("[ARG] Organiser")) {
+        return msg.reply("You do not have permission to use this command, please contact an organiser.");
+    }
+
     const match = msg.content.match(/\$removemember\s+\"([^\"]+)\"\s+<@!?(\d+)>/);
     if (!match) return msg.reply("Usage: $removemember \"Team Name\" @user");
 
@@ -121,6 +136,11 @@ async function removeMember(msg) {
 }
 
 async function deleteTeam(msg) {
+    const senderRoles = msg.member.roles.cache.map(r => r.name);
+    if (!senderRoles.includes("[ARG] Organiser")) {
+        return msg.reply("You do not have permission to use this command, please contact an organiser.");
+    }
+
     const match = msg.content.match(/\$deleteteam\s+\"([^\"]+)\"/);
     if (!match) return msg.reply("Usage: $deleteteam \"Team Name\"");
 

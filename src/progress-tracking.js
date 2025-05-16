@@ -6,8 +6,8 @@ config();
 const prefix = "$";
 const flags = {
     "1": process.env.FLAG1,
-    "2":process.env.FLAG2,
-    "3":process.env.FLAG3
+    "2": process.env.FLAG2,
+    "3": process.env.FLAG3
 };
 
 async function checkPhase(msg) {
@@ -17,7 +17,6 @@ async function checkPhase(msg) {
 }
 
 async function submitFlag(msg, args) {
-
     const playerID = await msg.author.id;
     const usrRoles = await msg.member.roles.cache.map(r => r.name);
     
@@ -30,27 +29,27 @@ async function submitFlag(msg, args) {
             return msg.reply("Please submit a valid flag!");
         }
 
-        const usrSubmission = msg.content.slice(prefix.length + args[0].length).trim();
-
         const player = await Player.findOne({ _id: playerID});
         if (!player) {
             return msg.reply("You are not registered within the ARG's database, please contact one of the organisers for assistance!");
         }
 
         for (const [phase, flag] of Object.entries(flags)) {
-            if (usrSubmission != flag) continue;
+            if (args[0] !== flag) continue;
 
             const currentPhase = player.currentPhase;
             const targetPhase = Number(phase);
             const nextPhase = targetPhase + 1;
 
             if (currentPhase > targetPhase) {
-                return msg.reply("You have already completed this phase, please move on to the next phase.");
+                await msg.delete();
+                return msg.channel.send("You have already completed this phase, please move on to the next phase.");
             }
 
             if (currentPhase !== targetPhase) {
-                msg.reply("It seems you are trying to skip a phase. Smh my head 🤦‍♂️.");
-                return msg.reply("@organiser help is required to deal with this case.");
+                await msg.delete();
+                msg.channel.send(`It seems you are trying to skip phase ${phase}. Smh my head 🤦‍♂️.`);
+                return msg.channel.send(`Hey, <@&${process.env.ORG}> a mentor is needed here!`);
             }
 
             try {

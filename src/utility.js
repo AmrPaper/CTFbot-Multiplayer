@@ -7,12 +7,12 @@ async function connectDB() {
     }
 }
 
-async function upsertPlayer({ id, name, team }) {
+async function upsertPlayer({ id, name, team, currentPhase }) {
     const update = {};
 
     if (name !== undefined) update.name = name;
-    // Important: explicitly allow null for removal
     if (team !== undefined) update.team = team;
+    if (currentPhase !== undefined) update.currentPhase = currentPhase;
 
     return Player.findByIdAndUpdate(
         id,
@@ -21,12 +21,10 @@ async function upsertPlayer({ id, name, team }) {
     );
 }
 
-
 async function checkUsers(id) {
     await connectDB();
     const user = await Player.findById(id);
     return !!user;
 }
-
 
 export { checkUsers, upsertPlayer, connectDB };

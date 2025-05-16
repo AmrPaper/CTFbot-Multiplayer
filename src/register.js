@@ -64,9 +64,8 @@ async function leave(msg) {
 }
 
 async function remove(msg, args) {
-    const sender = await msg.guild.members.fetch(msg.author.id);
     const senderRoles = msg.member.roles.cache.map(r => r.name);
-    if (senderRoles.includes("[ARG] Organiser") || sender.permissions.has("ADMINISTRATOR")) {
+    if (senderRoles.includes("[ARG] Organiser")) {
         let id = args[0].match(/\d+/)[0];
         const userExists = await checkUsers(id);
 
@@ -93,9 +92,8 @@ async function remove(msg, args) {
 }
 
 async function add(msg, args) {
-    const sender = await msg.guild.members.fetch(msg.author.id);
     const senderRoles = msg.member.roles.cache.map(r => r.name);
-    if (senderRoles.includes("[ARG] Organiser") || sender.permissions.has("ADMINISTRATOR")) {
+    if (senderRoles.includes("[ARG] Organiser")) {
         let id = args[0].match(/\d+/)[0];
         const userExists = await checkUsers(id);
         const member = await msg.guild.members.fetch(id);
