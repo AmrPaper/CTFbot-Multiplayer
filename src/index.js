@@ -4,7 +4,7 @@ import { join, reset, leave, remove, add } from "./register.js";
 import { registerTeam, addMember, removeMember, deleteTeam } from "./team-assignment.js";
 import { submitFlag } from "./progress-tracking.js";
 import { welcome, intro, help, init } from "./commands.js";
-import { phase1, phase2 } from "./challenges.js";
+import { phase1, phase2, phase3 } from "./challenges.js";
 import { config } from "dotenv";
 const prefix = "$";
 
@@ -47,6 +47,7 @@ const commandHandlers = {
     "leave": leave,
     "phase1": phase1,
     "phase2": phase2,
+    "phase3": phase3,
     "bloop": (msg) => {
         console.log(msg.author);
         msg.reply("User info logged!");
