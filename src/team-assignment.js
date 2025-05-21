@@ -4,6 +4,8 @@ import { upsertPlayer } from "./utility.js";
 
 async function registerTeam(msg) {
     const senderRoles = msg.member.roles.cache.map(r => r.name);
+    const playerRole = msg.guild.roles.cache.find(r => r.name === '[ARG] Player');
+
     if (!senderRoles.includes("[ARG] Organiser")) {
         return msg.reply("You do not have permission to use this command, please contact an organiser.");
     }
@@ -26,6 +28,8 @@ async function registerTeam(msg) {
         name: teamName,
         color: colourCode,
         mentionable: false,
+        position: playerRole.position + 1,
+        hoist: true,
         reason: `Team role for ${teamName}`
     });
 
@@ -43,6 +47,18 @@ async function registerTeam(msg) {
             }
         ]
     });
+
+    let category = msg.guild.channels.cache.find(c => c.name === "Team Channels" && c.type === "GUILD_CATEGORY");
+    console.log(category);
+
+    if (!category) {
+        category = await msg.guild.channels.create({
+            name: "Team Channels",
+            type: ChannelType.GuildCategory
+        });
+    };
+
+    channel.setParent(category.id);
 
     const memberIDs = mentionedUsers.map(u => u.id);
 

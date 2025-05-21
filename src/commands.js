@@ -76,40 +76,20 @@ async function init(msg) {
 
     if (member.permissions.has("ADMINISTRATOR")) {
         try {
-            const player = await msg.guild.roles.cache.find((role) => role.name === "[ARG] Player");
-            const organiser = await msg.guild.roles.cache.find((role) => role.name === "[ARG] Organiser");
+            const playerRole = await msg.guild.roles.create({
+                name: '[ARG] Player',
+                color: '#0000FF',
+                mentionable: true,
+            });
     
-            if (!player && !organiser) {
-                await msg.guild.roles.create({
-                    name: '[ARG] Player',
-                    color: '#0000FF',
-                    mentionable: true,
-                });
-    
-                await msg.guild.roles.create({
-                    name: '[ARG] Organiser',
-                    color: '#FF0000',
-                    mentionable: true,
-                });
+            const organiserRole = await msg.guild.roles.create({
+                name: '[ARG] Organiser',
+                color: '#FF0000',
+                mentionable: true,
+                position: playerRole.position + 1
+            });
                 
-                msg.reply("Player and Organiser roles successfully created!");
-            } else if (!player && organiser) {
-                await msg.guild.roles.create({
-                    name: '[ARG] Player',
-                    color: '0000FF',
-                    mentionable: true,
-                });
-                msg.reply("Player role successfully created!");
-            } else if (player && !organiser) {
-                await msg.guild.roles.create({
-                    name: '[ARG] Organiser',
-                    color: 'FF0000',
-                    mentionable: true,
-                });
-                msg.reply("Organiser role successfully created!");
-            } else {
-                msg.reply("Player and Organiser roles both already exist");
-            }
+            msg.reply("Player and Organiser roles successfully created!");
         } catch (error) {
             console.log(`Error: ${error}`);
             msg.reply("There was an error creating the roles, please try again.");

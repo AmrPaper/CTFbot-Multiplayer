@@ -19,7 +19,9 @@ async function checkPhase(msg) {
 async function submitFlag(msg, args) {
     const playerID = await msg.author.id;
     const usrRoles = await msg.member.roles.cache.map(r => r.name);
-    
+    console.log(args);
+    console.log(args.join(""));
+
     try {
         if (!usrRoles.includes("[ARG] Player")) {
             return msg.reply("You are not registered in the ongoing ARG, please contact one of the organisers for assistance!");
@@ -35,7 +37,7 @@ async function submitFlag(msg, args) {
         }
 
         for (const [phase, flag] of Object.entries(flags)) {
-            if (args[0] !== flag) continue;
+            if (args.join("") !== flag) continue;
 
             const currentPhase = player.currentPhase;
             const targetPhase = Number(phase);
