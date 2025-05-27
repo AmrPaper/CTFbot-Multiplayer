@@ -48,8 +48,7 @@ async function registerTeam(msg) {
         ]
     });
 
-    let category = msg.guild.channels.cache.find(c => c.name === "Team Channels" && c.type === "GUILD_CATEGORY");
-    console.log(category);
+    let category = msg.guild.channels.cache.find(c => c.name === "Team Channels" && c.type === ChannelType.GuildCategory);
 
     if (!category) {
         category = await msg.guild.channels.create({

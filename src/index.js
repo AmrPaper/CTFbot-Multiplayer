@@ -1,4 +1,4 @@
-import {Client, IntentsBitField, ActivityType} from "discord.js";
+import {Client, IntentsBitField, ActivityType, AttachmentBuilder} from "discord.js";
 import {mongoose} from "mongoose";
 import { join, reset, leave, remove, add } from "./register.js";
 import { registerTeam, addMember, removeMember, deleteTeam } from "./team-assignment.js";
@@ -57,11 +57,20 @@ const commandHandlers = {
         msg.reply("User roles logged!");
     },
     "maktab": (msg) => {
-        msg.reply("Ya5 itta makana ya5");
+        msg.reply("Inta/Inti makana ya5");
     },
     "daz": (msg) => {
-        msg.reply("Sheeel min hinaa!!!");
+        msg.reply("daz daz");
     },
+    "hint": (msg) => { //Abdalla's custom command
+        msg.reply({
+            content: "I won't tell if you won't 👀",
+            files: ["https://media.discordapp.net/attachments/1284449006616973322/1376780440710414366/image.png?ex=68369234&is=683540b4&hm=57be91ec5182cb5ac50c6f181f590afe032df507eea8e042e1ac5a35734505cf&=&format=webp&quality=lossless&width=705&height=940"]
+        })
+    },
+    "quack": (msg) => { //Mosab's custom command
+        msg.reply("Watch for a surprise\nhttps://www.youtube.com/watch?v=EA65VtuKwX0")
+    }
 };
 
 //running different commands depending on the user's input
