@@ -1,6 +1,28 @@
 import { EmbedBuilder }  from "discord.js";
 import { checkPhase } from "./progress-tracking.js";
 
+let locked = true;
+
+function lock(msg) {
+    if (msg.author.id === process.env.OWNER_ID) {
+        locked = true;
+        console.log(locked);
+        msg.reply("Phases 2 and 3 are now on lockdown.");
+    } else {
+        msg.reply("Only the current owner is allowed to use this command.");
+    };
+};
+
+function unlock(msg) {
+    if (msg.author.id === process.env.OWNER_ID) {
+        locked = false;
+        console.log(locked);
+        msg.reply("Phases 2 and 3 have now been unlocked.");
+    } else {
+        msg.reply("Only the current owner is allowed to use this command.");
+    };
+};
+
 async function phase1(msg) {
     const challengeTxt = new EmbedBuilder()
     .setTitle("Phase 1")
@@ -44,7 +66,10 @@ async function phase2(msg) {
 
     const phase = await checkPhase(msg);
     if (phase) {
-        if (phase >= 2) {
+        if (locked == true) {
+            msg.reply("Sorry Phase 2 is currently unavailable, please try again later once the admin unlocks it.")
+        }
+        else if (phase >= 2) {
             msg.channel.send({embeds: [challengeTxt]});
         } else {
             msg.reply("You are not yet eligible to enter this phase.");
@@ -65,7 +90,10 @@ async function phase3(msg) {
 
     const phase = await checkPhase(msg);
     if (phase) {
-        if (phase >= 3) {
+        if (locked == true) {
+            msg.reply("Sorry Phase 3 is currently unavailable, please try again later once the admin unlocks it.")
+        }
+        else if (phase >= 3) {
             msg.channel.send({embeds: [challengeTxt]});
         } else {
             msg.reply("You are not yet eligible to enter this phase.");
@@ -73,4 +101,4 @@ async function phase3(msg) {
     };
 };
 
-export { phase1, phase2, phase3 };
+export { phase1, phase2, phase3, lock, unlock };

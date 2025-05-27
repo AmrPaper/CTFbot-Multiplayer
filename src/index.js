@@ -1,10 +1,10 @@
-import {Client, IntentsBitField, ActivityType, AttachmentBuilder} from "discord.js";
+import {Client, IntentsBitField, ActivityType, EmbedBuilder} from "discord.js";
 import {mongoose} from "mongoose";
 import { join, reset, leave, remove, add } from "./register.js";
 import { registerTeam, addMember, removeMember, deleteTeam } from "./team-assignment.js";
-import { submitFlag } from "./progress-tracking.js";
+import { endings, submitFlag } from "./progress-tracking.js";
 import { welcome, intro, help, init } from "./commands.js";
-import { phase1, phase2, phase3 } from "./challenges.js";
+import { lock, phase1, phase2, phase3, unlock } from "./challenges.js";
 import { config } from "dotenv";
 const prefix = "$";
 
@@ -33,7 +33,10 @@ client.on("ready", (c) => {
 const commandHandlers = {
     "submit-flag": submitFlag,
     "welcome": welcome,
+    "lock": lock,
+    "unlock": unlock,
     "remove": remove,
+    "endings": endings,
     "add": add,
     "init": init,
     "registerteam": registerTeam,
@@ -50,6 +53,7 @@ const commandHandlers = {
     "phase3": phase3,
     "bloop": (msg) => {
         console.log(msg.author);
+        console.log(msg.author.id)
         msg.reply("User info logged!");
     },
     "blip": (msg) => {
@@ -70,6 +74,10 @@ const commandHandlers = {
     },
     "quack": (msg) => { //Mosab's custom command
         msg.reply("Watch for a surprise\nhttps://www.youtube.com/watch?v=EA65VtuKwX0")
+    },
+    "bingus": (msg) => { //Amr's custom command
+        msg.reply("Oh. My. God.\nAre you seriously trying to cheat?")
+        msg.channel.send("https://tenor.com/view/barbie-diy-omg-oh-no-shocked-barbie-gif-13856210")
     }
 };
 
