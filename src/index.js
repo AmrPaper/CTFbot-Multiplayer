@@ -2,7 +2,7 @@ import {Client, IntentsBitField, ActivityType, EmbedBuilder} from "discord.js";
 import {mongoose} from "mongoose";
 import { join, reset, leave, remove, add } from "./register.js";
 import { registerTeam, addMember, removeMember, deleteTeam } from "./team-assignment.js";
-import { endings, submitFlag } from "./progress-tracking.js";
+import { startTimer, submitFlag } from "./progress-tracking.js";
 import { welcome, intro, help, init } from "./commands.js";
 import { lock, phase1, phase2, phase3, unlock } from "./challenges.js";
 import { config } from "dotenv";
@@ -31,12 +31,12 @@ client.on("ready", (c) => {
 });
 
 const commandHandlers = {
-    "submit-flag": submitFlag,
+    "submit": submitFlag,
     "welcome": welcome,
     "lock": lock,
     "unlock": unlock,
     "remove": remove,
-    "endings": endings,
+    "starttimer": startTimer,
     "add": add,
     "init": init,
     "registerteam": registerTeam,

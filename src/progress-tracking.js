@@ -4,12 +4,13 @@ import { Team, Player } from "./progress-schema.js";
 import { config } from "dotenv";
 config();
 
-const prefix = "$";
 const flags = {
     "1": process.env.FLAG1,
     "2": process.env.FLAG2,
     "3": process.env.FLAG3
 };
+
+let startDate;
 
 const goodEnding = new EmbedBuilder()
     .setTitle("Ending 1: Connection Reestablished")
@@ -50,10 +51,15 @@ const badEnding = new EmbedBuilder()
         Congratulations on solving your first case detectives, you can't win them all unfortunately.`
 },);
 
-function endings(msg) {
-    msg.channel.send({embeds: [goodEnding]});
-    msg.channel.send({embeds: [badEnding]});
-}
+function startTimer(msg) {
+    if (msg.author.id === process.env.OWNER_ID) {
+        startDate = new Date();
+        console.log(`The starting time is now set to ${startDate.getTime()}`);
+        msg.reply("The starting time has been logged.");
+    } else {
+        msg.reply("Only the current owner is allowed to use this command.");
+    };
+};
 
 async function checkPhase(msg) {
     mongoose.connect(process.env.MONGODB_URI);
@@ -87,6 +93,16 @@ async function submitFlag(msg, args) {
             const currentPhase = player.currentPhase;
             const targetPhase = Number(phase);
             const nextPhase = targetPhase + 1;
+
+            const phaseSuccessMessage = new EmbedBuilder()
+                .setTitle("Phase Passed Successfully")
+                .setDescription(`You've completed phase ${targetPhase}!`)
+                .setColor("#FFF9FB")
+                .setFooter({text: "Powered by Paper 🧻",})
+                .addFields({
+                    name: "Instructions",
+                    value: `Enter the command $phase${targetPhase+1} to proceed to the next phase!`
+            },);
 
             if (currentPhase > targetPhase) {
                 await msg.delete();
@@ -127,15 +143,22 @@ async function submitFlag(msg, args) {
                 console.log("Error deleting message:", error);
             }
 
-            return msg.channel.send(`You've submitted the correct flag for phase ${targetPhase}! Good Job!`);
-        }
-
-        msg.reply("The flag you submitted is incorrect. Try again 😉.");
-
+            if (targetPhase == 3) {
+                let currentDate = new Date();
+                if (currentDate.getTime() - startDate.getTime() > 20000) {
+                    return msg.channel.send({embeds: [badEnding]});
+                } else {
+                    return msg.channel.send({embeds: [goodEnding]});
+                }
+            } else {
+                return msg.channel.send({embeds: [phaseSuccessMessage]});
+            }
+        };
+        return msg.reply("The flag you submitted is incorrect. Try again 😉.");
     } catch (error) {
         console.log(`Unexpected error: ${error}`);
         msg.reply("An unexpected error occurred.");
     }
 };
 
-export { submitFlag, checkPhase, endings };
+export { submitFlag, checkPhase, startTimer };
