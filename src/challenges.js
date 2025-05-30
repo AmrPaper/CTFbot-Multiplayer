@@ -2,6 +2,7 @@ import { EmbedBuilder }  from "discord.js";
 import { checkPhase } from "./progress-tracking.js";
 
 let locked = true;
+let started = false;
 
 function lock(msg) {
     if (msg.author.id === process.env.OWNER_ID) {
@@ -23,6 +24,16 @@ function unlock(msg) {
     };
 };
 
+function start(msg) {
+    if (msg.author.id === process.env.OWNER_ID) {
+        started = true;
+        console.log(locked);
+        return msg.reply("The CTF has now begun!");
+    } else {
+        return msg.reply("Only the current owner is allowed to use this command.");
+    };
+};
+
 async function phaseTest(msg) {
     const challengeTxt = new EmbedBuilder()
     .setTitle("Test Phase (Phase 0)")
@@ -31,8 +42,8 @@ async function phaseTest(msg) {
     .setFooter({text: "Powered by Paper 🧻",})
     .addFields({
         name: "Data",
-        value: `Lorem Ipsum
-        ${process.env.PHASE_1_FILES}`
+        value: `Welcome detectives,\n For your first case we need you to look a little into our man Quigga here, word on the street is that he has an interesting background.\n We managed to get our hands on some files he has on his computer, some of these seem personal, but we're sure you'll figure out what to with all of them.\n You'll find the files linked below:\n
+        ${process.env.PHASE_TEST_FILES}`
     },);
 
     return msg.channel.send({embeds: [challengeTxt]});
@@ -58,11 +69,17 @@ async function phase1(msg) {
     },);
 
     const phase = await checkPhase(msg);
+    const usrRoles = await msg.member.roles.cache.map(r => r.name);
+    if (!usrRoles.includes("[ARG] Player")) {
+            return msg.reply("You are not registered in the ongoing ARG, please contact one of the organisers for assistance!");
+        }
     if (phase) {
-        if (phase >= 1) {
-            msg.channel.send({embeds: [challengeTxt]});
+        if (started == false) {
+            return msg.reply("Sorry the ctf has yet to begin, please try again later once the admin starts it.")
+        } else if (phase >= 1) {
+            return msg.channel.send({embeds: [challengeTxt]});
         } else {
-            msg.reply("You are not yet eligible to enter this phase.");
+            return msg.reply("You are not yet eligible to enter this phase.");
         }
     };
 };
@@ -80,14 +97,19 @@ async function phase2(msg) {
     },);
 
     const phase = await checkPhase(msg);
-    if (phase) {
-        if (locked == true) {
-            msg.reply("Sorry Phase 2 is currently unavailable, please try again later once the admin unlocks it.")
+    const usrRoles = await msg.member.roles.cache.map(r => r.name);
+    if (!usrRoles.includes("[ARG] Player")) {
+            return msg.reply("You are not registered in the ongoing ARG, please contact one of the organisers for assistance!");
         }
-        else if (phase >= 2) {
-            msg.channel.send({embeds: [challengeTxt]});
+    if (phase) {
+        if (started == false) {
+            return msg.reply("Sorry the ctf has yet to begin, please try again later once the admin starts it.")
+        } else if (locked == true) {
+            return msg.reply("Sorry Phase 2 is currently unavailable, please try again later once the admin unlocks it.")
+        } else if (phase >= 2) {
+            return msg.channel.send({embeds: [challengeTxt]});
         } else {
-            msg.reply("You are not yet eligible to enter this phase.");
+            return msg.reply("You are not yet eligible to enter this phase.");
         }
     };
 };
@@ -104,16 +126,21 @@ async function phase3(msg) {
     },);
 
     const phase = await checkPhase(msg);
-    if (phase) {
-        if (locked == true) {
-            msg.reply("Sorry Phase 3 is currently unavailable, please try again later once the admin unlocks it.")
+    const usrRoles = await msg.member.roles.cache.map(r => r.name);
+    if (!usrRoles.includes("[ARG] Player")) {
+            return msg.reply("You are not registered in the ongoing ARG, please contact one of the organisers for assistance!");
         }
-        else if (phase >= 3) {
-            msg.channel.send({embeds: [challengeTxt]});
+    if (phase) {
+        if (started == false) {
+            return msg.reply("Sorry the ctf has yet to begin, please try again later once the admin starts it.")
+        } else if (locked == true) {
+            return msg.reply("Sorry Phase 3 is currently unavailable, please try again later once the admin unlocks it.")
+        } else if (phase >= 3) {
+            return msg.channel.send({embeds: [challengeTxt]});
         } else {
-            msg.reply("You are not yet eligible to enter this phase.");
+           return msg.reply("You are not yet eligible to enter this phase.");
         }
     };
 };
 
-export { phase1, phase2, phase3, lock, unlock, phaseTest };
+export { phase1, phase2, phase3, lock, unlock, phaseTest, start };

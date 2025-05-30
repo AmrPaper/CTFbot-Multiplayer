@@ -4,7 +4,7 @@ import { join, reset, leave, remove, add } from "./register.js";
 import { registerTeam, addMember, removeMember, deleteTeam } from "./team-assignment.js";
 import { startTimer, submitFlag, checkPhase } from "./progress-tracking.js";
 import { welcome, intro, help, init } from "./commands.js";
-import { lock, phase1, phase2, phase3, phaseTest, unlock } from "./challenges.js";
+import { lock, phase1, phase2, phase3, phaseTest, unlock, start } from "./challenges.js";
 import { config } from "dotenv";
 const prefix = "$";
 
@@ -43,6 +43,7 @@ const commandHandlers = {
     "removemember": removeMember,
     "addmember": addMember,
     "deleteteam": deleteTeam,
+    "start": start,
     "intro":intro,
     "help": help,
     "join": join,

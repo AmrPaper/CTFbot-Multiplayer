@@ -27,12 +27,12 @@ function help(msg) {
         value: "Removes you from the CTF.",
         inline: false,
     },{
-        name: "$phase[]",
-        value: "Provides you with the files for the specified challenge, replace the [] with the number of the stage you're currently on.\n For example using $phase2 will give you the files for the second stage!",
+        name: "$phase#",
+        value: "Provides you with the files for the specified challenge, replace the # with the number of the stage you're currently on.\n For example using $phase2 will give you the files for the second stage!",
         inline: false,
     },{
-        name: "$submit-flag",
-        value: "Allows you to submit the flag to complete the challenge you're currently on and unlock the next one!\n Use case: $submit-flag flag",
+        name: "$submit",
+        value: "Allows you to submit the flag to complete the challenge you're currently on and unlock the next one!\n Use case: $submit PaperCTF={myFlag}",
         inline: false,
     },);
 
@@ -42,7 +42,7 @@ function help(msg) {
 function welcome(msg) {
     const welcomeMessage = new EmbedBuilder()
     .setTitle("Welcome!")
-    .setDescription("Welcome to Autist Retreat's first CTF! Hope you're having a great day, and get ready to prove yourself in these mystery filled series of challenges!\nThe format for this CTF is a little odd, due to everyone's different timezones and busy schedules, we've opted to instead make this a more csual and solo experience, where each player is free to start and progress through the challenges as they'd like, this also gives us the opportunity to release challenges periodically whenever enough time is available to work on them, we hope you'll enjoy your time with this mini project!\n\nPlease do try to be respectful throughtout the event and stick to the guidelines outlined below!\n")
+    .setDescription("Welcome the first PaperCTF brought to you by ISS-SUDAN\n Please do try to be respectful throughtout the event and stick to the guidelines outlined below!")
     .setColor("#0099ff")
     .setFooter({text: "Powered by Paper 🧻",})
     .addFields({
@@ -55,7 +55,7 @@ function welcome(msg) {
         inline: false,
     },{
         name:"Need Help?",
-        value:"You can always run the $help command for a list of all the available commands that Rue is equipped with, though if you encounter any problems throughout your play or hit a wall, don't hesitate to contact Paper about anything!"
+        value:"You can always run the $help command for a list of all the available commands that Quigga is equipped with, though if you encounter any problems throughout your play or hit a wall, don't hesitate to contact any of the organizers about anything!"
     });
 
     msg.channel.send({embeds: [welcomeMessage]});
