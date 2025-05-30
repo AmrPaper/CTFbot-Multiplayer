@@ -96,7 +96,10 @@ const commandHandlers = {
         }
     },
     "haraka": (msg) => { //Momen's custom command
-        msg.reply("haraka");
+        msg.reply({
+            content: "Here we go!",
+            files: ["./resources/quack.wav"]
+        });
     },
     "rescue": (msg) => { //Mohammed Amir's custom command
         msg.reply("daz");
