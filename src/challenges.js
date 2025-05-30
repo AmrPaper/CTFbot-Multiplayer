@@ -23,6 +23,21 @@ function unlock(msg) {
     };
 };
 
+async function phaseTest(msg) {
+    const challengeTxt = new EmbedBuilder()
+    .setTitle("Test Phase (Phase 0)")
+    .setDescription("Practice session")
+    .setColor("#FFF9FB")
+    .setFooter({text: "Powered by Paper 🧻",})
+    .addFields({
+        name: "Data",
+        value: `Lorem Ipsum
+        ${process.env.PHASE_1_FILES}`
+    },);
+
+    return msg.channel.send({embeds: [challengeTxt]});
+};
+
 async function phase1(msg) {
     const challengeTxt = new EmbedBuilder()
     .setTitle("Phase 1")
@@ -101,4 +116,4 @@ async function phase3(msg) {
     };
 };
 
-export { phase1, phase2, phase3, lock, unlock };
+export { phase1, phase2, phase3, lock, unlock, phaseTest };

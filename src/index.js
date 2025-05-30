@@ -1,10 +1,10 @@
-import {Client, IntentsBitField, ActivityType, EmbedBuilder} from "discord.js";
+import {Client, IntentsBitField, ActivityType} from "discord.js";
 import {mongoose} from "mongoose";
 import { join, reset, leave, remove, add } from "./register.js";
 import { registerTeam, addMember, removeMember, deleteTeam } from "./team-assignment.js";
-import { startTimer, submitFlag } from "./progress-tracking.js";
+import { startTimer, submitFlag, checkPhase } from "./progress-tracking.js";
 import { welcome, intro, help, init } from "./commands.js";
-import { lock, phase1, phase2, phase3, unlock } from "./challenges.js";
+import { lock, phase1, phase2, phase3, phaseTest, unlock } from "./challenges.js";
 import { config } from "dotenv";
 const prefix = "$";
 
@@ -23,7 +23,7 @@ const client = new Client({
 client.on("ready", (c) => {
     console.log(`${c.user.tag} is now online ya zoooool!`);
     client.user.setActivity({
-        name: "الليلة بالليل 🌙",
+        name: " Alela Bilel/الليلة بالليل 🌙",
         type: ActivityType.Listening,
     });
 
@@ -48,6 +48,7 @@ const commandHandlers = {
     "join": join,
     "reset": reset,
     "leave": leave,
+    "phase0": phaseTest,
     "phase1": phase1,
     "phase2": phase2,
     "phase3": phase3,
@@ -69,7 +70,7 @@ const commandHandlers = {
     "hint": (msg) => { //Abdalla's custom command
         msg.reply({
             content: "I won't tell if you won't 👀",
-            files: ["https://media.discordapp.net/attachments/1284449006616973322/1376780440710414366/image.png?ex=68369234&is=683540b4&hm=57be91ec5182cb5ac50c6f181f590afe032df507eea8e042e1ac5a35734505cf&=&format=webp&quality=lossless&width=705&height=940"]
+            files: ["./resources/QR.png"]
         })
     },
     "quack": (msg) => { //Mosab's custom command
@@ -78,6 +79,27 @@ const commandHandlers = {
     "bingus": (msg) => { //Amr's custom command
         msg.reply("Oh. My. God.\nAre you seriously trying to cheat?")
         msg.channel.send("https://tenor.com/view/barbie-diy-omg-oh-no-shocked-barbie-gif-13856210")
+    },
+    "dayirhint": async (msg) => { //Awab's custom command
+        const phase = await checkPhase(msg);
+        if (phase == 1) {
+            msg.reply("Check the trash bin file!");
+        } else if (phase == 2) {
+            msg.reply("Shid 7elak ya5!");
+        } else if (phase == 3) {
+            msg.reply({
+                content: "This should help you out a bit",
+                files: ["./resources/phase3.mp3"]
+            });
+        } else {
+            msg.reply("Allah yideena wa yideek 🙏");
+        }
+    },
+    "haraka": (msg) => { //Momen's custom command
+        msg.reply("haraka");
+    },
+    "rescue": (msg) => { //Mohammed Amir's custom command
+        msg.reply("daz");
     }
 };
 

@@ -5,12 +5,23 @@ import { config } from "dotenv";
 config();
 
 const flags = {
+    "0": process.env.FLAGTEST,
     "1": process.env.FLAG1,
     "2": process.env.FLAG2,
     "3": process.env.FLAG3
 };
 
 let startDate;
+
+const testPhaseMessage = new EmbedBuilder()
+                .setTitle("Tutorial Phase Passed Successfully")
+                .setDescription(`You've completed Phase 0!`)
+                .setColor("#FFF9FB")
+                .setFooter({text: "Powered by Paper 🧻",})
+                .addFields({
+                    name: "Note:",
+                    value: `We hope you now have a better understanding of how the competition will be conducted, please do feel free to contact any of the mentors if you have any questions.\nGood luck on the real thing!`
+            },);
 
 const goodEnding = new EmbedBuilder()
     .setTitle("Ending 1: Connection Reestablished")
@@ -103,6 +114,10 @@ async function submitFlag(msg, args) {
                     name: "Instructions",
                     value: `Enter the command $phase${targetPhase+1} to proceed to the next phase!`
             },);
+
+            if (targetPhase == 0) {
+                return msg.channel.send({embeds: [testPhaseMessage]})
+            }
 
             if (currentPhase > targetPhase) {
                 await msg.delete();
