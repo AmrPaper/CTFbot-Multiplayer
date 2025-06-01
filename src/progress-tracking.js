@@ -12,6 +12,7 @@ const flags = {
 };
 
 let startDate;
+let allotedTime;
 
 const testPhaseMessage = new EmbedBuilder()
                 .setTitle("Tutorial Phase Passed Successfully")
@@ -71,6 +72,37 @@ function startTimer(msg) {
         msg.reply("Only the current owner is allowed to use this command.");
     };
 };
+
+function checkTime(msg) {
+    if (msg.author.id === process.env.OWNER_ID) {
+        const currentTime = Date.now();
+        const elapsed = currentTime - startDate.getTime();
+        const remaining = allotedTime - elapsed;
+
+        const formatTime = ms => {
+            const clamped = Math.max(ms, 0);
+            const hours = Math.floor(clamped / 3600000);
+            const minutes = Math.floor((clamped % 3600000) / 60000);
+            const seconds = Math.floor((clamped % 60000) / 1000);
+            return `${hours}h ${minutes}m ${seconds}s`;
+        };
+
+    msg.reply(`Elapsed Time: ${formatTime(elapsed)} (${elapsed} ms)`);
+    msg.reply(`Time Remaining: ${remaining > 0 ? formatTime(remaining) : "Time's up!"} (${remaining} ms)`);
+    } else {
+        msg.reply("Only the current owner is allowed to use this command.");
+    };
+}
+
+function setAlloted(msg, args) {
+    if (msg.author.id === process.env.OWNER_ID) {
+        allotedTime = args.join("");
+        console.log(`The starting time is now set to ${allotedTime}`);
+        msg.reply("The starting time has been logged.");
+    } else {
+        msg.reply("Only the current owner is allowed to use this command.");
+    };
+}
 
 async function checkPhase(msg) {
     mongoose.connect(process.env.MONGODB_URI);
@@ -160,7 +192,7 @@ async function submitFlag(msg, args) {
 
             if (targetPhase == 3) {
                 let currentDate = new Date();
-                if (currentDate.getTime() - startDate.getTime() > 20000) {
+                if (currentDate.getTime() - startDate.getTime() > allotedTime) {
                     return msg.channel.send({embeds: [badEnding]});
                 } else {
                     return msg.channel.send({embeds: [goodEnding]});
@@ -176,4 +208,4 @@ async function submitFlag(msg, args) {
     }
 };
 
-export { submitFlag, checkPhase, startTimer };
+export { submitFlag, checkPhase, startTimer, checkTime, setAlloted };

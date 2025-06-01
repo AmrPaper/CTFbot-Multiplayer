@@ -64,6 +64,7 @@ async function phase1(msg) {
         -Picture of a sticky note found under Etti's keyboard\n
         -Interview Transcripts\n
         -Pictures of Etti's room\n
+        -A damaged drive collected by Forensics team\n
         You'll find the files in the google drive link below:\n
         ${process.env.PHASE_1_FILES}`
     },);
@@ -122,7 +123,10 @@ async function phase3(msg) {
     .setFooter({text: "Powered by Paper 🧻",})
     .addFields({
         name: "Data",
-        value: `This phase is not available during the test run, hope you enjoyed!`
+        value: `Oliver left you a recording device. He told you where Rabid usually hangs out and instructed you to try to capture any audio frequencies in that area. You used the device to capture all the available audio frequencies, some were unintelligable, though others were clear enough to listen in on.\n
+        The forensics team at your department also contacted you, letting you know that they have recovered some data from the drive retrieved from Etti’s room, though it seems the drive itself is encrypted.\n
+        You'll find all the collected files linked down below:\n
+        ${process.env.PHASE_3_FILES}`
     },);
 
     const phase = await checkPhase(msg);

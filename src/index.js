@@ -1,8 +1,8 @@
 import {Client, IntentsBitField, ActivityType} from "discord.js";
-import {mongoose} from "mongoose";
+import {mongoose, set} from "mongoose";
 import { join, reset, leave, remove, add } from "./register.js";
 import { registerTeam, addMember, removeMember, deleteTeam } from "./team-assignment.js";
-import { startTimer, submitFlag, checkPhase } from "./progress-tracking.js";
+import { startTimer, submitFlag, checkPhase, checkTime, setAlloted } from "./progress-tracking.js";
 import { welcome, intro, help, init } from "./commands.js";
 import { lock, phase1, phase2, phase3, phaseTest, unlock, start } from "./challenges.js";
 import { config } from "dotenv";
@@ -37,6 +37,8 @@ const commandHandlers = {
     "unlock": unlock,
     "remove": remove,
     "starttimer": startTimer,
+    "checktime": checkTime,
+    "setallotted": setAlloted,
     "add": add,
     "init": init,
     "registerteam": registerTeam,
